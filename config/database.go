@@ -1,19 +1,19 @@
-package main
+package config
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var DB *gorm.DB // Xuất khẩu biến DB
 
-func connectDB() {
+// ConnectDB thực hiện kết nối đến database
+func ConnectDB() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -30,25 +30,10 @@ func connectDB() {
 		dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	// Kết nối Database
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Không thể kết nối với cơ sở dữ liệu: ", err)
+	var errOpen error
+	DB, errOpen = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if errOpen != nil {
+		log.Fatal("Không thể kết nối với cơ sở dữ liệu: ", errOpen)
 	}
 	fmt.Println("Kết nối cơ sở dữ liệu thành công.")
-}
-func main() {
-	connectDB()
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	port := os.Getenv("PORT")
-	app := fiber.New()
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		fmt.Println("ok")
-		return c.SendString("Hello, World!") // Trả về một thông báo cho client
-	})
-
-	log.Fatal(app.Listen(":" + port))
 }

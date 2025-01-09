@@ -1,0 +1,17 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o tmp/main.exe ."
+  include = ["."]
+  exclude = ["tmp", "vendor"]
+
+[log]
+  time = true
+
+[watch]
+  dirs = ["."]
+  ext = ["go", "tpl", "tmpl", "html"]
+
+[reflex]
+  cmd = "tmp/main.exe"
