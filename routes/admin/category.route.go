@@ -7,5 +7,6 @@ import (
 )
 
 func SetupCategoryRoutes(app *fiber.App) {
-	app.Get("/admin/categories", controllers.GetCategory)
+	app.Get("api/admin/categories", controllers.GetCategory)
+	app.Post("api/admin/create/category", controllers.CreateCategory)
 }
