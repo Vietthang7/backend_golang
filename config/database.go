@@ -33,7 +33,7 @@ func ConnectDB() {
 	var errOpen error
 	DB, errOpen = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if errOpen != nil {
-		log.Fatal("Không thể kết nối với cơ sở dữ liệu: ", errOpen)
+		log.Fatal("Không thể kết  nối với cơ sở dữ liệu: ", errOpen)
 	}
 	fmt.Println("Kết nối cơ sở dữ liệu thành công.")
 }
