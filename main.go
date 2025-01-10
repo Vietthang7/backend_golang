@@ -2,31 +2,27 @@ package main
 
 import (
 	"log"
+	// Import package config
 	"myapp/config"
-	"myapp/models" // Import package config
+	routes "myapp/routes/admin"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
-func getTours(c *fiber.Ctx) error {
-	// Lấy danh sách các tour từ cơ sở dữ liệu với điều kiện "deleted = false" và "status = 'active'"
-	var tours []models.Tour
-	if err := config.DB.Where("deleted = ? AND status = ?", false, "active").Find(&tours).Error; err != nil {
-		log.Println("Lỗi khi truy vấn cơ sở dữ liệu:", err)
-		return c.Status(500).SendString("Lỗi khi truy vấn cơ sở dữ liệu")
-	}
+// func getTours(c *fiber.Ctx) error {
+// 	var tours []models.TourView
+// 	// khai báo slice : nhớ là muốn lưu thì phải dùng con trỏ
 
-	// Trả về dữ liệu tour dưới dạng JSON
-	return c.JSON(fiber.Map{
-		"pageTitle": "Danh sách tour5",
-		"tours":     tours,
-	})
-}
+// 	config.DB.Model(&models.Tour{}).Select([]string{"id", "schedule", "title"}).Where("deleted = ? AND status = ?", false, "active").Find(&tours)
+// 	return c.JSON(fiber.Map{
+// 		"pageTitle": "Danh sách tours",
+// 		"tours":     tours,
+// 	})
+// }
 
 func main() {
-	// Kết nối đến Database
 	config.ConnectDB()
 
 	// Lấy giá trị cổng từ biến môi trường
@@ -38,14 +34,8 @@ func main() {
 
 	// Khởi tạo Fiber
 	app := fiber.New()
+	// app.Get("/tours", getTours)
+	routes.SetupRoutes(app)
 
-	// app.Get("/", func(c *fiber.Ctx) error {
-	// 	fmt.Println("ok")
-	// 	log.Println("ok")
-	// 	return c.SendString("Hello, World!") // Trả về một thông báo cho client
-	// })
-	app.Get("/tours", getTours)
-
-	// Lắng nghe kết nối tại cổng được chỉ định
 	log.Fatal(app.Listen(":" + port))
 }

@@ -24,6 +24,11 @@ type Tour struct {
 	CreatedAt   time.Time  `gorm:"type:datetime;default:CURRENT_TIMESTAMP"`                            // Thời gian tạo
 	UpdatedAt   time.Time  `gorm:"type:datetime;default:CURRENT_TIMESTAMP;onUpdate:CURRENT_TIMESTAMP"` // Thời gian cập nhật
 }
+type TourView struct {
+	ID       uint   `json:"id"`
+	Title    string `json:"title"`
+	Schedule string `json:"schedule"`
+}
 
 // TableName chỉ định tên bảng tương ứng với struct
 func (Tour) TableName() string {
